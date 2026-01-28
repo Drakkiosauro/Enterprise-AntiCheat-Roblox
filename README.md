@@ -1,33 +1,32 @@
-Enterprise Anti-Cheat Roblox.
+# Aviso — Uso Educacional (Não recomendado como Anti-Cheat de produção)
 
-Overview
-Enterprise Anti-Cheat is a robust, server-side focused security solution for Roblox environments. It is designed to mitigate common exploits such as speed hacks, teleportation, fly hacks, and remote event spoofing through advanced logic and client-server synchronization.
+AVISO: Este projeto é um exemplo educacional de detecção de comportamento de movimento em Roblox. Não use este código como um sistema de anti-cheat em produção sem revisão humana, testes extensivos e adaptações ao seu jogo. Ele pode gerar falsos‑positivos, conter falhas de segurança e não resistir a atacantes determinados.
 
-Technical Features
-Token-Based Handshake The system generates a unique GUID (Globally Unique Identifier) for each player session. This token must be passed with every remote event call. Requests without a valid token are flagged as Remote Spoofing attempts, resulting in an immediate ban.
+O que é
+- Código de exemplo que demonstra heurísticas básicas de detecção server-side:
+  - Velocidade excessiva, teleporte suspeito, tempo no ar (possível fly).
+  - Envio de "heartbeats" do cliente como evidência.
+  - Logs bufferizados persistidos em DataStore.
 
-Dynamic Remote Security The communication bridge between client and server uses dynamically named RemoteEvents. This obfuscation technique prevents automated scripts and basic executors from easily locating and firing security-related events.
+Principais limitações e riscos
+- Segredos no cliente não são seguros: tokens embutidos em LocalScripts podem ser lidos/modificados por exploiters. Trate tokens apenas como evidência, não como prova absoluta.
+- Falsos‑positivos: teleports legítimos, respawns, mecânicas do jogo e alta latência podem disparar detecções.
+- DataStore e redes podem falhar: ações punitivas (kick/ban) dependem de escrita bem sucedida no DataStore.
+- Código demonstrativo não lida com todos os cenários de produção (escala, propagação de ban entre servidores, retries robustos, auditoria forense).
 
-Predictive Movement Verification Instead of simple distance checks, the system calculates the maximum possible distance a player can travel based on:
+Recomendações antes de usar (mesmo para testes)
+- Mantenha `ALLOW_AUTO_BAN = false` enquanto estiver testando.
+- Teste exaustivamente sob variações de latência, teleports legítimos, respawns e diferentes mapas.
+- Colete e revise logs/evidências antes de tomar decisões punitivas automáticas.
+- Marque/ignore teleports legítimos feitos pelo servidor para evitar false‑positives.
+- Implemente retry/backoff ao gravar DataStore e monitore erros.
+- Minimize lógica sensível no cliente — servidor deve ser a fonte da verdade.
 
-Humanoid WalkSpeed
+Como usar para aprendizado
+- Use em um ambiente de desenvolvimento (não em jogo público com jogadores reais).
+- Ajuste thresholds (velocidade, tempo no ar, tolerância de ping) conforme seu jogo.
+- Observe os logs gerados para entender porque cada violação foi marcada.
+- Experimente transformar detecções em alertas para revisão humana ao invés de ban automático.
 
-Delta Time (dt)
-
-Network Latency (Ping Compensation)
-
-Active Position Correction (Rubberbanding) When a violation is detected but does not yet meet the ban threshold, the system forcefully resets the player's HumanoidRootPart to their last known valid position, effectively nullifying the exploit in real-time.
-
-Environment Integrity Checks The client-side component performs periodic scans for common exploit signatures, such as unauthorized changes to the game's metatable or the presence of global functions typically injected by script executors.
-
-Configuration
-The system is highly customizable via the SETTINGS table:
-
-WALK_SPEED_LIMIT: The base speed allowed.
-
-TELEPORT_THRESHOLD: Maximum distance allowed between frames before a reset occurs.
-
-VIOLATIONS_TO_BAN: Strictness level for permanent automated actions.
-
-Disclaimer
-This software is provided for educational purposes in the field of defensive security. It is intended to demonstrate how to protect game integrity against common exploitation methods within the Luau environment.
+Licença
+- Sugerimos usar uma licença permissiva (MIT) se for compartilhar publicamente.
