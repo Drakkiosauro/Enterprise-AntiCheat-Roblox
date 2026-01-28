@@ -1,4 +1,4 @@
-SIMPLE ANTI CHEAT FOR ROBLOX
+Enterprise Anti-Cheat Roblox.
 
 Overview
 Enterprise Anti-Cheat is a robust, server-side focused security solution for Roblox environments. It is designed to mitigate common exploits such as speed hacks, teleportation, fly hacks, and remote event spoofing through advanced logic and client-server synchronization.
